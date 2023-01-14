@@ -1,4 +1,5 @@
 ﻿using MagicVilla_villaAPI.Data;
+using MagicVilla_villaAPI.Logging;
 using MagicVilla_villaAPI.Models;
 using MagicVilla_villaAPI.Models.DTO;
 using Microsoft.AspNetCore.JsonPatch;
@@ -13,10 +14,17 @@ namespace MagicVilla_villaAPI.Controllers
     [ApiController]
     public class VillaAPIController : ControllerBase
     {
+        private readonly ILogging _logger;
+        public VillaAPIController(ILogging logger)
+        {
+            _logger = logger;
+        }
+
         //<---- Get Method ---->
         [HttpGet]
         public ActionResult <IEnumerable<VillaDTO>> GetVillas()
         {
+            _logger.Log("Getting all villas", "");
             return Ok(VillaStore.villaList);
         }
 
@@ -31,6 +39,7 @@ namespace MagicVilla_villaAPI.Controllers
         {
             if (id == 0)
             {
+                _logger.Log("Get Villa Error with id" + id, "error");
                 return BadRequest();
             }
             var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
@@ -96,8 +105,7 @@ namespace MagicVilla_villaAPI.Controllers
         //<---- Put Method ---->
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPut("{id:int}", Name = "UpdateVilla")]
         public IActionResult UpdateVilla(int id, [FromBody]VillaDTO villaDTO)
         {
@@ -106,7 +114,8 @@ namespace MagicVilla_villaAPI.Controllers
                 return BadRequest();
             }
             var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
-            villa.Name = villa.Name;
+            string? name = villa.Name;
+            villa.Name = name;
             villa.Cgpa = villaDTO.Cgpa;
             villa.Age = villaDTO.Age;
 
