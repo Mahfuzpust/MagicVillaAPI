@@ -5,10 +5,14 @@ namespace MagicVilla_villaAPI.Models.DTO
     public class VillaDTO
     {
         public int Id { get; set; }
-        //[Required]
-        //[MaxLength(30)]
-        public string? Name { get; set; }
-        public double Cgpa { get; set; }
-        public int Age { get; set; }
+        [Required]
+        [MaxLength(30)]
+        public string Name { get; set; }
+        public string Details { get; set; }
+        public double Rate { get; set; }
+        public int Sqft { get; set; }
+        public int Ocupancy { get; set; }
+        public string ImgUrl { get; set; }
+        public string Amenity { get; set; }
     }
 }
